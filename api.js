@@ -1,4 +1,3 @@
-// api.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
@@ -21,6 +20,7 @@ function loadKeys() {
 
 // Lưu dữ liệu vào file key.json
 function saveKeys(data) {
+    console.log("[✅] Updated HWID");
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 }
 
@@ -50,14 +50,20 @@ app.post('/updatehwid', (req, res) => {
 
     if (keyFound) {
         saveKeys(keysData);
-        res.json({ message: '[✅] HWID của bạn đã được cập nhật!' });
+        res.json({ message: '[✅] Key Found' });
     } else {
         res.status(404).json({ message: 'Key không hợp lệ' });
     }
 });
 
+// API lấy dữ liệu từ key.json
+app.get('/getkeys', (req, res) => {
+    const keysData = loadKeys();
+    res.json(keysData); // Trả về dữ liệu từ file key.json
+});
+
 // Khởi động server
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server đang chạy tại http://localhost:${PORT}`);
 });
